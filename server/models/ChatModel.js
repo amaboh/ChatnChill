@@ -9,7 +9,7 @@ const chatSchema = new Schema(
     },
     },
     {
-        timestamp: true,
+        timestamps: true,
     }
     
 );
