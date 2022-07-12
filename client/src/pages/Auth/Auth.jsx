@@ -1,165 +1,167 @@
-import React,{useState} from 'react';
+import React, { useState } from "react";
 import "./Auth.css";
 import Logo from "../../img/logo.png";
-import {login,signup} from "../../actions/AuthActions.js";
-import {useDispatch, useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
-
+import { logIn, signUp } from "../../actions/AuthActions.js";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Auth = () => {
-    const initialState = {
-        firstName: "",
-        lastName: "",
-        username: "",
-        password: "",
-        confirmpass: "",
-    }
-    const loading = useSelector((state) => state.authReducer.loading);
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const [isSignUp, setIsSignUp] = useState(false);
+  const initialState = {
+    firstName: "",
+    lastName: "",
+    username: "",
+    password: "",
+    confirmpass: "",
+  };
+  const loading = useSelector((state) => state.authReducer.loading);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [isSignUp, setIsSignUp] = useState(false);
 
-    const [data, setData] = useState(initialState);
+  const [data, setData] = useState(initialState);
 
-    const [confirmPass, setConfirmPass] = useState(true);
+  const [confirmPass, setConfirmPass] = useState(true);
 
-    // handle Form Submissin
-    const handleChange =(e)=>{
-        setData({...data, [e.target.name]: e.target.value});
-    }
+  // handle Form Submissin
+  const handleChange = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+  };
 
-    const handleSubmit =(e)=>{
-        e.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-        if(isSignUp){
-            if(data.password !== data.confirmpass){
-                setConfirmPass(false)
-            }
-        }
-    }
+    if (isSignUp) {
+      data.password === data.confirmpass
+        ? dispatch(signUp(data))
+        : setConfirmPass(false);
+    }else{
+        dispatch(logIn(data))
+    } 
+  };
 
-    const resetForm=()=>{
-        setConfirmPass(true);
-        setData({firstName: "",
-        lastName: "",
-        username: "",
-        password: "",
-        confirmPassword: "",
-        })
-    }
+  const resetForm = () => {
+    setConfirmPass(true);
+    setData({
+      firstName: "",
+      lastName: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
+    });
+  };
   return (
     <div className="Auth">
-    {/* left side */}
+      {/* left side */}
 
-    <div className="a-left">
-      <img src={Logo} alt="" />
+      <div className="a-left">
+        <img src={Logo} alt="" />
 
-      <div className="Webname">
-        <h1>ZKC Media</h1>
-        <h6>Explore the ideas throughout the world</h6>
+        <div className="Webname">
+          <h1>ZKC Media</h1>
+          <h6>Explore the ideas throughout the world</h6>
+        </div>
       </div>
-    </div>
 
-    {/* right form side */}
+      {/* right form side */}
 
-    <div className="a-right">
-      <form className="infoForm authForm" onSubmit={handleSubmit}>
-        <h3>{isSignUp ? "Register" : "Login"}</h3>
-        {isSignUp && (
+      <div className="a-right">
+        <form className="infoForm authForm" onSubmit={handleSubmit}>
+          <h3>{isSignUp ? "Register" : "Login"}</h3>
+          {isSignUp && (
+            <div>
+              <input
+                required
+                type="text"
+                placeholder="First Name"
+                className="infoInput"
+                name="firstname"
+                value={data.firstname}
+                onChange={handleChange}
+              />
+              <input
+                required
+                type="text"
+                placeholder="Last Name"
+                className="infoInput"
+                name="lastname"
+                value={data.lastname}
+                onChange={handleChange}
+              />
+            </div>
+          )}
+
           <div>
             <input
               required
               type="text"
-              placeholder="First Name"
+              placeholder="Username"
               className="infoInput"
-              name="firstname"
-              value={data.firstname}
-              onChange={handleChange}
-            />
-            <input
-              required
-              type="text"
-              placeholder="Last Name"
-              className="infoInput"
-              name="lastname"
-              value={data.lastname}
+              name="username"
+              value={data.username}
               onChange={handleChange}
             />
           </div>
-        )}
-
-        <div>
-          <input
-            required
-            type="text"
-            placeholder="Username"
-            className="infoInput"
-            name="username"
-            value={data.username}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <input
-            required
-            type="password"
-            className="infoInput"
-            placeholder="Password"
-            name="password"
-            value={data.password}
-            onChange={handleChange}
-          />
-          {isSignUp && (
+          <div>
             <input
               required
               type="password"
               className="infoInput"
-              name="confirmpass"
-              placeholder="Confirm Password"
+              placeholder="Password"
+              name="password"
+              value={data.password}
               onChange={handleChange}
             />
-          )}
-        </div>
+            {isSignUp && (
+              <input
+                required
+                type="password"
+                className="infoInput"
+                name="confirmpass"
+                placeholder="Confirm Password"
+                onChange={handleChange}
+              />
+            )}
+          </div>
 
-        <span
-          style={{
-            color: "red",
-            fontSize: "12px",
-            alignSelf: "flex-end",
-            marginRight: "5px",
-            display: confirmPass ? "none" : "block",
-          }}
-        >
-          *Confirm password is not same
-        </span>
-        <div>
           <span
             style={{
+              color: "red",
               fontSize: "12px",
-              cursor: "pointer",
-              textDecoration: "underline",
-            }}
-            onClick={() => {
-              resetForm();
-              setIsSignUp((prev) => !prev);
+              alignSelf: "flex-end",
+              marginRight: "5px",
+              display: confirmPass ? "none" : "block",
             }}
           >
-            {isSignUp
-              ? "Already have an account Login"
-              : "Don't have an account Sign up"}
+            *Confirm password is not same
           </span>
-          <button
-            className="button infoButton"
-            type="Submit"
-            disabled={loading}
-          >
-            {loading ? "Loading..." : isSignUp ? "SignUp" : "Login"}
-          </button>
-        </div>
-      </form>
+          <div>
+            <span
+              style={{
+                fontSize: "12px",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+              onClick={() => {
+                resetForm();
+                setIsSignUp((prev) => !prev);
+              }}
+            >
+              {isSignUp
+                ? "Already have an account Login"
+                : "Don't have an account Sign up"}
+            </span>
+            <button
+              className="button infoButton"
+              type="Submit"
+              disabled={loading}
+            >
+              {loading ? "Loading..." : isSignUp ? "SignUp" : "Login"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-  )
-}
+  );
+};
 
-export default Auth
+export default Auth;
