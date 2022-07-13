@@ -37,7 +37,7 @@ export const registerUser = async (req, res, next) => {
 };
 
 // Login User
-export const login = async (req, res,next) => {
+export const login = async (req, res, next) => {
   try {
     const user = await UserModel.findOne({ username: req.body.username });
     if (!user) return next(createError(404, "User not found"));
@@ -50,12 +50,22 @@ export const login = async (req, res,next) => {
       return next(createError(400, "Wrong password or username!"));
 
     // implementing authorization with JWT
-   
+    const token = jwt.sign(
+      {
+        username: user.username,
+        id: user._id,
+      },
+      process.env.JWT_KEY,
+      { expiresIn: "1h" }
+    );
 
     const { password, isAdmin, ...otherDetails } = user._doc;
     res
+      .cookie("access_token", token, {
+        httpOnly: true,
+      })
       .status(200)
-      .json({ details: { ...otherDetails }, isAdmin });
+      .json({ details: { ...otherDetails }, isAdmin, token });
   } catch (err) {
     res.status(500).json(err);
   }

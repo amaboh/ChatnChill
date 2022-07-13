@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Auth.css";
 import Logo from "../../img/logo.png";
-import { logIn, signUp } from "../../actions/AuthActions.js";
+import { logIn, signUp } from "../../actions/AuthAction.js";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -13,9 +13,11 @@ const Auth = () => {
     password: "",
     confirmpass: "",
   };
-  const loading = useSelector((state) => state.authReducer.loading);
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const loading = useSelector((state) => state.authReducer.loading);
+
   const [isSignUp, setIsSignUp] = useState(false);
 
   const [data, setData] = useState(initialState);
