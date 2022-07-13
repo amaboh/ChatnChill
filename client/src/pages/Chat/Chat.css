@@ -46,6 +46,8 @@
   
   .conversation > div {
     position: relative;
+    display: flex;
+    flex-direction: row;
   }
   
   .online-dot {
@@ -57,7 +59,11 @@
     height: 1rem;
   }
   
-  
+  .name{
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+  }
   .chatbox-empty-message {
     display: flex;
     align-self: center;

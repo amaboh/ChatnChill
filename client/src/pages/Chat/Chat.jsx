@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import {useSelector} from "react-redux"
 import { userChats } from "../../api/ChatRequests";
+import Conversation from "../../components/Conversation/Conversation";
 import LogoSearch from "../../components/LogoSearch/LogoSearch";
 
 import "./Chat.css";
@@ -28,7 +29,13 @@ const Chat = () => {
         <LogoSearch />
         <div className="Chat-container">
             <h2>Chats</h2>
-            <div className="Chat-list">Conversatins</div>
+            <div className="Chat-list">
+              {chats.map((chat)=>(
+                <div key={details._id}>
+                  <Conversation  data={chat} currentUserId={details._id}/>
+                </div>
+              ))}
+            </div>
         </div>
       </div>
       {/* Right side */}

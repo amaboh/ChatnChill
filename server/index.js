@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+
+// routes
 import chatRoute from "./routes/chatRoute.js";
 import userRoute from "./routes/userRoute.js";
 import authRoute from "./routes/authRoute.js";
@@ -14,6 +16,10 @@ const app = express();
 app.use(express.json());
 
 app.use(cookieParser());
+
+// to serve images inside public folder
+app.use(express.static('public')); 
+app.use('/images', express.static('images'));
 
 app.use(
   cors({
@@ -42,6 +48,7 @@ app.use("/api/chat", chatRoute);
 app.use("/api/users", userRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/messages", messageRoute);
+
 
 app.listen(PORT, () => {
   connect();

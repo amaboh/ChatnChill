@@ -1,7 +1,7 @@
 import express from 'express';
 import { createChat, findChat, userChats } from '../controllers/ChatControllers.js';
 
-const router = express.Router();
+const  router = express.Router();
 
 router.post('/', createChat)
 router.get("/:userId", userChats)
