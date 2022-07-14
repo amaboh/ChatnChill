@@ -10,7 +10,9 @@ const ChatBox = ({ chat, currentUserId, setSendMessage, receiveMessage }) => {
   const [userData, setUserData] = useState(null);
   const [messages, setMessages] = useState(null);
   const [newMessage, setNewMessage] = useState("");
+
   const scroll = useRef();
+  const imageRef = useRef();
 
   const handleChange = (newMessage) => {
     setNewMessage(newMessage);
@@ -135,7 +137,14 @@ const ChatBox = ({ chat, currentUserId, setSendMessage, receiveMessage }) => {
               <div className="send-button button" onClick={handleSend}>
                 Send
               </div>
-            </div>
+              <input
+                type="file"
+                name=""
+                id=""
+                style={{ display: "none" }}
+                ref={imageRef}
+              />
+            </div>{""}
           </>
         ) : (
           <span className="chatbox-empty-message">

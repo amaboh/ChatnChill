@@ -32,15 +32,14 @@ const Chat = () => {
       }
     };
     getChats();
-  }, [user._id]);
+  }, [user ]);
 
   // connect to SOcket.io
   useEffect(() => {
     socket.current = io("http://localhost:8800");
     socket.current.emit("new-user-add", user._id);
     socket.current.on("get-users", (users) => {
-      setOnlineUsers(users);
-      console.log(onlineUsers);
+      setOnlineUsers(users); 
     });
   }, [user]);
 
@@ -54,9 +53,15 @@ const Chat = () => {
   // get messsage from socket server
   useEffect(() => {
     socket.current.on("receive-message", (data) => {
-      setRecieveMessage(data);
+      setRecieveMessage(data); 
     });
   }, []);
+
+  const checkOnlineStatus = (chat)=>{
+    const chatMember = chat.members.find((member) => member !== user._id);
+    const online = onlineUsers.find((user) => user.userId === chatMember)
+    return online ? true: false;
+  }
 
   return (
     <div className="Chat">
@@ -70,10 +75,10 @@ const Chat = () => {
               <div
                 key={user._id}
                 onClick={() => {
-                  setCurrentChat(chat);
+                  setCurrentChat(chat); 
                 }}
               >
-                <Conversation data={chat} currentUserId={user._id} />
+                <Conversation data={chat} currentUserId={user._id} online={checkOnlineStatus(chat)}/>
               </div>
             ))}
           </div>
