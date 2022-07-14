@@ -14,18 +14,14 @@ const Chat = () => {
   const [currentChat, setCurrentChat] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
 
+  const [sendMessage, setSendMessage] = useState(null);
+  const [receiveMessage, setRecieveMessage] = useState(null);
+
   const { details } = useSelector((state) => state.authReducer.authData);
   const user = details;
   const socket = useRef();
 
-  useEffect(() => {
-    socket.current = io("http://localhost:8800");
-    socket.current.emit("new-user-add", user._id);
-    socket.current.on("get-users", (user) => {
-      setOnlineUsers(user);
-    });
-  }, [user]);
-
+  // Get the chat in chat section
   useEffect(() => {
     const getChats = async () => {
       try {
@@ -36,7 +32,32 @@ const Chat = () => {
       }
     };
     getChats();
+  }, [user._id]);
+
+  // connect to SOcket.io
+  useEffect(() => {
+    socket.current = io("http://localhost:8800");
+    socket.current.emit("new-user-add", user._id);
+    socket.current.on("get-users", (users) => {
+      setOnlineUsers(users);
+      console.log(onlineUsers);
+    });
   }, [user]);
+
+  // send messgae to socket server
+  useEffect(() => {
+    if (sendMessage !== null) {
+      socket.current.emit("send-message", sendMessage);
+    }
+  }, [sendMessage]);
+
+  // get messsage from socket server
+  useEffect(() => {
+    socket.current.on("receive-message", (data) => {
+      setRecieveMessage(data);
+    });
+  }, []);
+
   return (
     <div className="Chat">
       {/* Left Side */}
@@ -63,7 +84,12 @@ const Chat = () => {
         <div style={{ width: "20rem", alignSelf: "flex-end" }}>
           <NavIcons />
         </div>
-        <ChatBox chat={currentChat} currentUserId={user._id} />
+        <ChatBox
+          chat={currentChat}
+          currentUserId={user._id}
+          setSendMessage={setSendMessage}
+          receiveMessage={receiveMessage}
+        />
       </div>
     </div>
   );

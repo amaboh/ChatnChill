@@ -22,6 +22,20 @@ io.on("connection", (socket) => {
     io.emit("get-users", activeUsers);
   });
 
+//   send message
+  socket.on("send-message", (data)=>{
+    const {receivedId} = data;
+    // retrieve receiver from active users
+    const user = activeUsers.find((user)=> user.userId === receivedId);
+    console.log("Sending from socket towards the recived id")
+    console.log("data", data)
+    if(user) {
+         io.to(user.socketId).emit("receive-message", data)
+    }
+  })
+
+
+
   socket.on("disconnect", () =>{  
     activeUsers = activeUsers.filter((user)=>user.socketId !== socket.id)
     console.log("User Disconnected", activeUsers);
